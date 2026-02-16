@@ -28,7 +28,7 @@ jobs:
         env:
           TX_TOKEN: ${{ secrets.TX_TOKEN }}
         run: |
-          tx pull -a --force --minimum-perc 10
+          if [ -n "$TX_TOKEN" ]; then tx pull -a --force --minimum-perc 10; else echo "No TX_TOKEN, skipping"; fi
           ls -la po/*.po 2>/dev/null || echo "No translations yet"
 
       - name: Compile translations
