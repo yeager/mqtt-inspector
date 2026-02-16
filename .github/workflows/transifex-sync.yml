@@ -1,0 +1,30 @@
+name: Sync Transifex Translations
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['po/*.pot']
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Transifex CLI
+        run: |
+          curl -o- https://raw.githubusercontent.com/transifex/cli/master/install.sh | bash
+          sudo mv tx /usr/local/bin/
+      - name: Push source & pull translations
+        env:
+          TX_TOKEN: ${{ secrets.TX_TOKEN }}
+        run: |
+          tx push -s --skip
+          tx pull -a --force --minimum-perc 10
+      - name: Commit translations
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add po/*.po
+          git diff --cached --quiet || git commit -m "i18n: sync translations from Transifex"
+          git push

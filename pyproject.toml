@@ -1,0 +1,7 @@
+[project]
+name = "mqtt-inspector"
+version = "0.1.0"
+description = "MQTT message inspector for IoT"
+authors = [{name = "Daniel Nylander", email = "daniel@danielnylander.se"}]
+license = {text = "GPL-3.0-or-later"}
+requires-python = ">=3.10"

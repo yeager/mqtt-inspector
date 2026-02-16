@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=ULMQTT message inspector for IoT
+Comment=MQTT message inspector for IoT
+Exec=mqtt-inspector
+Icon=se.danielnylander.mqtt-inspector
+Categories=Utility;
