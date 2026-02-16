@@ -2,121 +2,93 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    tags: ['v*']
 
 permissions:
   contents: write
 
 jobs:
-  build-deb:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
         with:
-          fetch-depth: 0
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      
-      - name: Install build dependencies
+          python-version: '3.12'
+
+      - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            devscripts debhelper-compat \
-            dh-python python3-all python3-setuptools \
-            gettext desktop-file-utils
-      
-      - name: Prepare source
+          sudo apt-get install -y gettext
+          curl -o- https://raw.githubusercontent.com/transifex/cli/master/install.sh | bash
+          sudo mv tx /usr/local/bin/
+
+      - name: Pull translations
+        env:
+          TX_TOKEN: ${{ secrets.TX_TOKEN }}
         run: |
-          # Extract version from tag
-          VERSION=${GITHUB_REF#refs/tags/v}
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          
-          # Update version in __init__.py
-          sed -i "s/__version__ = \".*\"/__version__ = \"$VERSION\"/" src/ha_l10n/__init__.py
-          
-          # Create source tarball
-          python -m build --sdist
-      
-      - name: Build Debian package
+          tx pull -a --force --minimum-perc 10
+          ls -la po/*.po 2>/dev/null || echo "No translations yet"
+
+      - name: Compile translations
         run: |
-          # Create debian directory structure
-          mkdir -p debian/source
-          
-          # Create control file
-          cat > debian/control << EOF
-          Source: ha-l10n
+          for po in po/*.po; do
+            [ -f "$po" ] || continue
+            lang=$(basename "$po" .po)
+            mkdir -p locale/$lang/LC_MESSAGES
+            msgfmt -o locale/$lang/LC_MESSAGES/mqtt-inspector.mo "$po"
+          done
+
+      - name: Build .deb
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          PKG=$(mktemp -d)
+          mkdir -p $PKG/usr/lib/python3/dist-packages/mqtt_inspector
+          mkdir -p $PKG/usr/bin
+          mkdir -p $PKG/usr/share/applications
+          mkdir -p $PKG/usr/share/icons/hicolor/scalable/apps
+          mkdir -p $PKG/usr/share/man/man1
+          mkdir -p $PKG/DEBIAN
+
+          cp src/mqtt_inspector/*.py $PKG/usr/lib/python3/dist-packages/mqtt_inspector/
+
+          for mo in locale/*/LC_MESSAGES/mqtt-inspector.mo; do
+            [ -f "$mo" ] || continue
+            lang=$(echo "$mo" | cut -d/ -f2)
+            mkdir -p $PKG/usr/share/locale/$lang/LC_MESSAGES
+            cp "$mo" $PKG/usr/share/locale/$lang/LC_MESSAGES/
+          done
+
+          cp data/se.danielnylander.mqtt-inspector.desktop $PKG/usr/share/applications/
+          cp data/icons/*.svg $PKG/usr/share/icons/hicolor/scalable/apps/
+          [ -f data/man/mqtt-inspector.1 ] && cp data/man/mqtt-inspector.1 $PKG/usr/share/man/man1/
+
+          printf '#!/usr/bin/env python3\nfrom mqtt_inspector.main import main\nmain()\n' > $PKG/usr/bin/mqtt-inspector
+          chmod +x $PKG/usr/bin/mqtt-inspector
+
+          cat > $PKG/DEBIAN/control << CTRL
+          Package: mqtt-inspector
+          Version: ${VERSION}
           Section: utils
           Priority: optional
-          Maintainer: Daniel Nylander <daniel@danielnylander.se>
-          Build-Depends: debhelper-compat (= 13),
-                        dh-python,
-                        python3-all,
-                        python3-setuptools,
-                        gettext,
-                        desktop-file-utils
-          Standards-Version: 4.6.1
-          Homepage: https://github.com/yeager/ha-l10n
-          Vcs-Git: https://github.com/yeager/ha-l10n.git
-          Vcs-Browser: https://github.com/yeager/ha-l10n
-          
-          Package: ha-l10n
           Architecture: all
-          Depends: \${python3:Depends}, \${misc:Depends},
-                   python3-gi,
-                   gir1.2-gtk-4.0,
-                   gir1.2-adw-1,
-                   python3-requests
-          Description: Home Assistant translation status dashboard
-           Home Assistant L10n is a GTK4/Libadwaita application that provides
-           a dashboard for monitoring Home Assistant translation status across
-           different languages.
-          EOF
-          
-          # Create other debian files
-          echo "13" > debian/compat
-          echo "3.0 (quilt)" > debian/source/format
-          
-          cat > debian/rules << 'EOF'
-          #!/usr/bin/make -f
-          
-          %:
-          	dh $@ --with python3 --buildsystem=pybuild
-          
-          override_dh_auto_install:
-          	dh_auto_install
-          	# Install desktop file
-          	mkdir -p debian/ha-l10n/usr/share/applications
-          	desktop-file-install --dir=debian/ha-l10n/usr/share/applications data/se.danielnylander.ha-l10n.desktop
-          	# Install icon
-          	mkdir -p debian/ha-l10n/usr/share/icons/hicolor/scalable/apps
-          	cp data/icons/se.danielnylander.ha-l10n.svg debian/ha-l10n/usr/share/icons/hicolor/scalable/apps/
-          	# Install man page
-          	mkdir -p debian/ha-l10n/usr/share/man/man1
-          	cp data/man/ha-l10n.1 debian/ha-l10n/usr/share/man/man1/
-          EOF
-          
-          chmod +x debian/rules
-          
-          cat > debian/changelog << EOF
-          ha-l10n ($VERSION-1) unstable; urgency=medium
-          
-            * New upstream release
-          
-           -- Daniel Nylander <daniel@danielnylander.se>  $(date -R)
-          EOF
-          
-          # Build package
-          dpkg-buildpackage -us -uc
-      
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            ../*.deb
-          generate_release_notes: true
+          Depends: python3 (>= 3.10), python3-gi, gir1.2-gtk-4.0, gir1.2-adw-1
+          Maintainer: Daniel Nylander <daniel@danielnylander.se>
+          Homepage: https://github.com/yeager/mqtt-inspector
+          Description: MQTT message inspector for IoT
+          CTRL
+
+          # Remove leading spaces from control file
+          sed -i 's/^          //' $PKG/DEBIAN/control
+
+          dpkg-deb --root-owner-group --build $PKG mqtt-inspector_${VERSION}_all.deb
+          dpkg-deb --info mqtt-inspector_${VERSION}_all.deb
+
+      - name: Create release and upload
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          gh release create $GITHUB_REF_NAME mqtt-inspector_${VERSION}_all.deb --title "v${VERSION}" --notes "Release v${VERSION}" --repo yeager/mqtt-inspector || \
+          gh release upload $GITHUB_REF_NAME mqtt-inspector_${VERSION}_all.deb --clobber --repo yeager/mqtt-inspector
