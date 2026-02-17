@@ -1,5 +1,9 @@
 # ULMQTT message inspector for IoT
 
+## Screenshot
+
+![MQTT Inspector](screenshots/main.png)
+
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Transifex](https://img.shields.io/badge/Transifex-translate-green.svg)](https://www.transifex.com/danielnylander/mqtt-inspector/)
 
