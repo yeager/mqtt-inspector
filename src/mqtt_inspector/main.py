@@ -20,7 +20,7 @@ class MainWindow(Adw.ApplicationWindow):
         super().__init__(*args, **kwargs)
         
         self.set_default_size(800, 600)
-        self.set_title(_(UMQTT))
+        self.set_title(_("MQTT Inspector"))
         
         # Create header bar
         header = Adw.HeaderBar()
@@ -37,14 +37,14 @@ class MainWindow(Adw.ApplicationWindow):
         box.append(self.status_label)
         
     def show_about(self, action, param):
-        about = Adw.AboutWindow(transient_for=self)
-        about.set_application_name(_(UMQTT))
+        about = Adw.AboutDialog()
+        about.set_application_name(_("MQTT Inspector"))
         about.set_application_icon("se.danielnylander.mqtt-inspector")
         about.set_developer_name("Daniel Nylander")
         about.set_version("0.1.0")
         about.set_website("https://github.com/yeager/mqtt-inspector")
         about.set_translator_credits(_("translator-credits"))
-        about.present()
+        about.present(self)
         
     def show_shortcuts(self, action, param):
         builder = Gtk.Builder()

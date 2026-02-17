@@ -1,0 +1,87 @@
+name: Build .deb
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: sudo apt-get install -y gettext dpkg-dev
+
+      - name: Pull translations
+        env:
+          TX_TOKEN: ${{ secrets.TX_TOKEN }}
+        run: |
+          curl -o- https://raw.githubusercontent.com/transifex/cli/master/install.sh | bash
+          sudo mv tx /usr/local/bin/
+          tx pull -a --force --minimum-perc 10 || true
+
+      - name: Compile translations
+        run: |
+          for po in po/*.po; do
+            [ -f "$po" ] || continue
+            lang=$(basename "$po" .po)
+            mkdir -p locale/$lang/LC_MESSAGES
+            msgfmt -o locale/$lang/LC_MESSAGES/mqtt-inspector.mo "$po"
+          done
+
+      - name: Build .deb
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          PKG=$(mktemp -d)
+          mkdir -p $PKG/usr/lib/python3/dist-packages/mqtt_inspector
+          mkdir -p $PKG/usr/bin
+          mkdir -p $PKG/usr/share/applications
+          mkdir -p $PKG/DEBIAN
+
+          cp src/mqtt_inspector/*.py $PKG/usr/lib/python3/dist-packages/mqtt_inspector/
+
+          for mo in locale/*/LC_MESSAGES/mqtt-inspector.mo; do
+            [ -f "$mo" ] || continue
+            lang=$(echo "$mo" | cut -d/ -f2)
+            mkdir -p $PKG/usr/share/locale/$lang/LC_MESSAGES
+            cp "$mo" $PKG/usr/share/locale/$lang/LC_MESSAGES/
+          done
+
+          mkdir -p $PKG/usr/share/icons/hicolor/scalable/apps
+          cp data/icons/se.danielnylander.mqtt-inspector.svg $PKG/usr/share/icons/hicolor/scalable/apps/
+
+          cp data/se.danielnylander.mqtt-inspector.desktop $PKG/usr/share/applications/
+
+          printf '#!/usr/bin/env python3\nfrom mqtt_inspector.main import main\nmain()\n' > $PKG/usr/bin/mqtt-inspector
+          chmod +x $PKG/usr/bin/mqtt-inspector
+
+          cat > $PKG/DEBIAN/control << EOF
+          Package: mqtt-inspector
+          Version: ${VERSION}-1
+          Section: utils
+          Priority: optional
+          Architecture: all
+          Depends: python3 (>= 3.10), python3-gi, gir1.2-gtk-4.0, gir1.2-adw-1
+          Maintainer: Daniel Nylander <daniel@danielnylander.se>
+          Homepage: https://github.com/yeager/mqtt-inspector
+          Description: MQTT message inspector for IoT
+          EOF
+          sed -i 's/^          //' $PKG/DEBIAN/control
+
+          dpkg-deb --root-owner-group --build $PKG mqtt-inspector_${VERSION}-1_all.deb
+
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          gh release create $GITHUB_REF_NAME mqtt-inspector_${VERSION}-1_all.deb \
+            --title "v${VERSION}" \
+            --notes "Release v${VERSION}" \
+            --repo yeager/mqtt-inspector || \
+          gh release upload $GITHUB_REF_NAME mqtt-inspector_${VERSION}-1_all.deb \
+            --clobber --repo yeager/mqtt-inspector

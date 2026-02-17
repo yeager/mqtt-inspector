@@ -28,7 +28,6 @@ jobs:
         run: |
           rpmdev-setuptree
           
-          # Extract version
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             VERSION=${GITHUB_REF#refs/tags/v}
           else
@@ -36,26 +35,24 @@ jobs:
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
       
-      - name: Create RPM spec file
+      - name: Create RPM spec and build
         run: |
-          cat > ~/rpmbuild/SPECS/ha-l10n.spec << EOF
-          Name:           ha-l10n
-          Version:        $VERSION
-          Release:        1%{?dist}
-          Summary:        Home Assistant translation status dashboard
+          cat > ~/rpmbuild/SPECS/mqtt-inspector.spec << 'SPEC'
+          Name:           mqtt-inspector
+          Version:        VERSION_PLACEHOLDER
+          Release:        1
+          Summary:        MQTT message inspector for IoT
           
           License:        GPL-3.0-or-later
-          URL:            https://github.com/yeager/ha-l10n
+          URL:            https://github.com/yeager/mqtt-inspector
           Source0:        %{name}-%{version}.tar.gz
           
           BuildArch:      noarch
           BuildRequires:  python3-devel python3-setuptools desktop-file-utils gettext
-          Requires:       python3-gobject gtk4 libadwaita python3-requests
+          Requires:       python3-gobject gtk4 libadwaita
           
           %description
-          Home Assistant L10n is a GTK4/Libadwaita application that provides
-          a dashboard for monitoring Home Assistant translation status across
-          different languages.
+          MQTT Inspector is a GTK4/Libadwaita application for inspecting MQTT messages.
           
           %prep
           %setup -q
@@ -66,47 +63,35 @@ jobs:
           %install
           %py3_install
           
-          # Install desktop file
           mkdir -p %{buildroot}%{_datadir}/applications
-          desktop-file-install --dir=%{buildroot}%{_datadir}/applications data/se.danielnylander.ha-l10n.desktop
+          desktop-file-install --dir=%{buildroot}%{_datadir}/applications data/se.danielnylander.mqtt-inspector.desktop
           
-          # Install icon
           mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
-          cp data/icons/se.danielnylander.ha-l10n.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/
-          
-          # Install man page
-          mkdir -p %{buildroot}%{_mandir}/man1
-          cp data/man/ha-l10n.1 %{buildroot}%{_mandir}/man1/
+          cp data/icons/se.danielnylander.mqtt-inspector.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/
           
           %files
           %license LICENSE
           %doc README.md
-          %{python3_sitelib}/ha_l10n/
-          %{python3_sitelib}/ha_l10n-*.egg-info/
-          %{_bindir}/ha-l10n
-          %{_datadir}/applications/se.danielnylander.ha-l10n.desktop
-          %{_datadir}/icons/hicolor/scalable/apps/se.danielnylander.ha-l10n.svg
-          %{_mandir}/man1/ha-l10n.1*
+          %{python3_sitelib}/mqtt_inspector/
+          %{python3_sitelib}/mqtt_inspector-*.egg-info/
+          %{_bindir}/mqtt-inspector
+          %{_datadir}/applications/se.danielnylander.mqtt-inspector.desktop
+          %{_datadir}/icons/hicolor/scalable/apps/se.danielnylander.mqtt-inspector.svg
           
           %changelog
-          * $(date '+%a %b %d %Y') Daniel Nylander <daniel@danielnylander.se> - $VERSION-1
-          - New upstream release
-          EOF
-      
-      - name: Create source tarball
-        run: |
-          # Update version in source
-          sed -i "s/__version__ = \".*\"/__version__ = \"$VERSION\"/" src/ha_l10n/__init__.py
+          SPEC
+          sed -i "s/VERSION_PLACEHOLDER/$VERSION/g" ~/rpmbuild/SPECS/mqtt-inspector.spec
+          echo "          * $(date '+%a %b %d %Y') Daniel Nylander <daniel@danielnylander.se> - $VERSION-1" >> ~/rpmbuild/SPECS/mqtt-inspector.spec
+          echo "          - New upstream release" >> ~/rpmbuild/SPECS/mqtt-inspector.spec
           
-          # Create tarball
-          tar czf ~/rpmbuild/SOURCES/ha-l10n-$VERSION.tar.gz \
-            --transform "s,^,ha-l10n-$VERSION/," \
+          sed -i "s/__version__ = \".*\"/__version__ = \"$VERSION\"/" src/mqtt_inspector/__init__.py
+          
+          tar czf ~/rpmbuild/SOURCES/mqtt-inspector-$VERSION.tar.gz \
+            --transform "s,^,mqtt-inspector-$VERSION/," \
             --exclude='.git*' --exclude='*.pyc' --exclude='__pycache__' \
             *
-      
-      - name: Build RPM
-        run: |
-          rpmbuild -ba ~/rpmbuild/SPECS/ha-l10n.spec
+          
+          rpmbuild -ba ~/rpmbuild/SPECS/mqtt-inspector.spec
       
       - name: Upload RPM artifacts
         uses: actions/upload-artifact@v3
