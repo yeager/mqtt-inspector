@@ -1,1 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><circle cx="64" cy="64" r="56" fill="#660099"/><text x="64" y="84" font-size="64" fill="white" text-anchor="middle" font-family="sans-serif">M</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a3a5c"/>
+      <stop offset="100%" stop-color="#0f2440"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#bg)"/>
+  <!-- Central hub node -->
+  <circle cx="64" cy="64" r="14" fill="white" opacity="0.9"/>
+  <circle cx="64" cy="64" r="8" fill="#1a3a5c"/>
+  <!-- Satellite nodes -->
+  <circle cx="32" cy="36" r="8" fill="#4fc3f7" opacity="0.85"/>
+  <circle cx="96" cy="36" r="8" fill="#4fc3f7" opacity="0.85"/>
+  <circle cx="32" cy="92" r="8" fill="#4fc3f7" opacity="0.85"/>
+  <circle cx="96" cy="92" r="8" fill="#4fc3f7" opacity="0.85"/>
+  <!-- Connection lines -->
+  <line x1="40" y1="40" x2="54" y2="56" stroke="white" stroke-width="2" opacity="0.5"/>
+  <line x1="88" y1="40" x2="74" y2="56" stroke="white" stroke-width="2" opacity="0.5"/>
+  <line x1="40" y1="88" x2="54" y2="72" stroke="white" stroke-width="2" opacity="0.5"/>
+  <line x1="88" y1="88" x2="74" y2="72" stroke="white" stroke-width="2" opacity="0.5"/>
+  <!-- Magnifying glass overlay -->
+  <circle cx="88" cy="88" r="16" fill="none" stroke="white" stroke-width="3" opacity="0.4"/>
+  <line x1="100" y1="100" x2="110" y2="110" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+</svg>
