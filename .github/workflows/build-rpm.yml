@@ -37,7 +37,7 @@ jobs:
           Name:           mqtt-inspector
           Version:        VERSION_PLACEHOLDER
           Release:        1
-          Summary:        
+          Summary:        MQTT message inspector for IoT
           License:        GPL-3.0-or-later
           URL:            https://github.com/yeager/mqtt-inspector
           Source0:        %{name}-%{version}.tar.gz
