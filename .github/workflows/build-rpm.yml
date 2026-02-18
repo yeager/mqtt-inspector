@@ -11,92 +11,83 @@ permissions:
 jobs:
   build-rpm:
     runs-on: ubuntu-latest
-    container:
-      image: fedora:latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Install build dependencies
+
+      - name: Install RPM tools
+        run: sudo apt-get update && sudo apt-get install -y rpm
+
+      - name: Get version
+        id: version
+        run: echo "version=$(grep -oP '__version__ = \"\K[^\"]+' src/mqtt_inspector/__init__.py)" >> $GITHUB_OUTPUT
+
+      - name: Setup RPM build
         run: |
-          dnf update -y
-          dnf install -y \
-            rpm-build rpmdevtools \
-            python3-devel python3-setuptools \
-            desktop-file-utils gettext
-      
-      - name: Set up RPM build environment
+          mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+          VERSION=${{ steps.version.outputs.version }}
+          DIR=mqtt-inspector-$VERSION
+          mkdir -p $DIR
+          cp -r src/ data/ LICENSE README.md pyproject.toml $DIR/ 2>/dev/null || true
+          tar czf ~/rpmbuild/SOURCES/$DIR.tar.gz $DIR
+
+      - name: Create spec and build
         run: |
-          rpmdev-setuptree
-          
-          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/v}
-          else
-            VERSION="0.1.0"
-          fi
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-      
-      - name: Create RPM spec and build
-        run: |
+          VERSION=${{ steps.version.outputs.version }}
           cat > ~/rpmbuild/SPECS/mqtt-inspector.spec << 'SPEC'
           Name:           mqtt-inspector
           Version:        VERSION_PLACEHOLDER
           Release:        1
-          Summary:        MQTT message inspector for IoT
-          
+          Summary:        
           License:        GPL-3.0-or-later
           URL:            https://github.com/yeager/mqtt-inspector
           Source0:        %{name}-%{version}.tar.gz
-          
           BuildArch:      noarch
-          BuildRequires:  python3-devel python3-setuptools desktop-file-utils gettext
           Requires:       python3-gobject gtk4 libadwaita
-          
+
           %description
-          MQTT Inspector is a GTK4/Libadwaita application for inspecting MQTT messages.
-          
+          GTK4/Libadwaita application.
+
           %prep
           %setup -q
-          
-          %build
-          %py3_build
-          
+
           %install
-          %py3_install
-          
-          mkdir -p %{buildroot}%{_datadir}/applications
-          desktop-file-install --dir=%{buildroot}%{_datadir}/applications data/se.danielnylander.mqtt-inspector.desktop
-          
-          mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
-          cp data/icons/se.danielnylander.mqtt-inspector.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/
-          
+          mkdir -p %{buildroot}/usr/share/mqtt-inspector/mqtt_inspector
+          cp src/mqtt_inspector/*.py %{buildroot}/usr/share/mqtt-inspector/mqtt_inspector/
+          if [ -d src/mqtt_inspector/locale ]; then
+            cp -r src/mqtt_inspector/locale %{buildroot}/usr/share/mqtt-inspector/mqtt_inspector/
+          fi
+
+          mkdir -p %{buildroot}/usr/bin
+          cat > %{buildroot}/usr/bin/mqtt-inspector << 'LAUNCHER'
+          #!/bin/bash
+          exec python3 -c "import sys; sys.path.insert(0, '/usr/share/mqtt-inspector'); from mqtt_inspector.main import main; main()" "$@"
+          LAUNCHER
+          chmod 755 %{buildroot}/usr/bin/mqtt-inspector
+
+          mkdir -p %{buildroot}/usr/share/applications
+          cp data/*.desktop %{buildroot}/usr/share/applications/ 2>/dev/null || true
+
+          mkdir -p %{buildroot}/usr/share/icons/hicolor/scalable/apps
+          cp data/icons/*.svg %{buildroot}/usr/share/icons/hicolor/scalable/apps/ 2>/dev/null || true
+
           %files
           %license LICENSE
           %doc README.md
-          %{python3_sitelib}/mqtt_inspector/
-          %{python3_sitelib}/mqtt_inspector-*.egg-info/
-          %{_bindir}/mqtt-inspector
-          %{_datadir}/applications/se.danielnylander.mqtt-inspector.desktop
-          %{_datadir}/icons/hicolor/scalable/apps/se.danielnylander.mqtt-inspector.svg
-          
-          %changelog
+          /usr/bin/mqtt-inspector
+          /usr/share/mqtt-inspector/
+          /usr/share/applications/*.desktop
+          /usr/share/icons/hicolor/scalable/apps/*.svg
           SPEC
           sed -i "s/VERSION_PLACEHOLDER/$VERSION/g" ~/rpmbuild/SPECS/mqtt-inspector.spec
-          echo "          * $(date '+%a %b %d %Y') Daniel Nylander <daniel@danielnylander.se> - $VERSION-1" >> ~/rpmbuild/SPECS/mqtt-inspector.spec
-          echo "          - New upstream release" >> ~/rpmbuild/SPECS/mqtt-inspector.spec
-          
-          sed -i "s/__version__ = \".*\"/__version__ = \"$VERSION\"/" src/mqtt_inspector/__init__.py
-          
-          tar czf ~/rpmbuild/SOURCES/mqtt-inspector-$VERSION.tar.gz \
-            --transform "s,^,mqtt-inspector-$VERSION/," \
-            --exclude='.git*' --exclude='*.pyc' --exclude='__pycache__' \
-            *
-          
+          sed -i "s|\${repo}|mqtt-inspector|g; s|\${PYNAME}|mqtt_inspector|g" ~/rpmbuild/SPECS/mqtt-inspector.spec
           rpmbuild -ba ~/rpmbuild/SPECS/mqtt-inspector.spec
-      
-      - name: Upload RPM artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: rpm-packages
-          path: |
-            ~/rpmbuild/RPMS/noarch/*.rpm
-            ~/rpmbuild/SRPMS/*.rpm
+
+      - name: Upload RPM to release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          gh release upload "v$VERSION" \
+            ~/rpmbuild/RPMS/noarch/mqtt-inspector-${VERSION}-1.noarch.rpm \
+            --clobber
