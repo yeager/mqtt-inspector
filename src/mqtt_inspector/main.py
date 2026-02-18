@@ -347,12 +347,15 @@ class MainWindow(Adw.ApplicationWindow):
         self._subscription = "#"
 
         # --- Build UI ---
+        toolbar_view = Adw.ToolbarView()
+        self.set_content(toolbar_view)
+
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.set_content(main_box)
+        toolbar_view.set_content(main_box)
 
         # Header bar
         header = Adw.HeaderBar()
-        self.set_titlebar(header)
+        toolbar_view.add_top_bar(header)
 
         # Connection button + indicator
         conn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
