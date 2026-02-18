@@ -794,9 +794,12 @@ class MainWindow(Adw.ApplicationWindow):
         about.set_application_name(_("MQTT Inspector"))
         about.set_application_icon("se.danielnylander.mqtt-inspector")
         about.set_developer_name("Daniel Nylander")
+        about.set_developers(["Daniel Nylander <daniel@danielnylander.se>"])
         about.set_version(__version__)
         about.set_website("https://github.com/yeager/mqtt-inspector")
-        about.set_translator_credits(_("translator-credits"))
+        about.set_license_type(Gtk.License.GPL_3_0)
+        about.set_issue_url("https://github.com/yeager/mqtt-inspector/issues")
+        about.set_translator_credits(_("Translate this app: https://www.transifex.com/danielnylander/mqtt-inspector/"))
         about.present(self)
 
     def show_shortcuts(self, action, param):
