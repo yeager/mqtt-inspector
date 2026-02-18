@@ -1,5 +1,7 @@
 # ULMQTT message inspector for IoT
 
+[![Version](https://img.shields.io/badge/version-0.2.0-blue)](https://github.com/yeager/mqtt-inspector/releases)
+
 ## Screenshot
 
 ![MQTT Inspector](screenshots/main.png)
