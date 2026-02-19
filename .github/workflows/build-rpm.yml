@@ -14,61 +14,68 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install RPM tools
-        run: sudo apt-get update && sudo apt-get install -y rpm
+      - name: Install tools
+        run: sudo apt-get update && sudo apt-get install -y rpm gettext
 
       - name: Get version
         id: version
         run: echo "version=$(grep -oP '__version__ = \"\K[^\"]+' src/mqtt_inspector/__init__.py)" >> $GITHUB_OUTPUT
 
-      - name: Setup RPM build
+      - name: Compile translations
         run: |
-          mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-          VERSION=${{ steps.version.outputs.version }}
-          DIR=mqtt-inspector-$VERSION
-          mkdir -p $DIR
-          cp -r src/ data/ LICENSE README.md pyproject.toml $DIR/ 2>/dev/null || true
-          tar czf ~/rpmbuild/SOURCES/$DIR.tar.gz $DIR
+          for po in po/*.po; do
+            [ -f "$po" ] || continue
+            lang=$(basename "$po" .po)
+            mkdir -p src/mqtt_inspector/locale/$lang/LC_MESSAGES
+            msgfmt -o src/mqtt_inspector/locale/$lang/LC_MESSAGES/mqtt-inspector.mo "$po"
+          done
 
-      - name: Create spec and build
+      - name: Build RPM
         run: |
-          VERSION=${{ steps.version.outputs.version }}
-          cat > ~/rpmbuild/SPECS/mqtt-inspector.spec << 'SPEC'
+          VER=${{ steps.version.outputs.version }}
+          mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+
+          PKG=mqtt-inspector-$VER
+          mkdir -p $PKG
+          cp -r src/ data/ LICENSE README.md pyproject.toml $PKG/ 2>/dev/null || true
+          tar czf ~/rpmbuild/SOURCES/$PKG.tar.gz $PKG
+
+          cat > ~/rpmbuild/SPECS/mqtt-inspector.spec << SPECEOF
           Name:           mqtt-inspector
-          Version:        VERSION_PLACEHOLDER
+          Version:        $VER
           Release:        1
           Summary:        MQTT message inspector for IoT
           License:        GPL-3.0-or-later
           URL:            https://github.com/yeager/mqtt-inspector
-          Source0:        %{name}-%{version}.tar.gz
+          Source0:        mqtt-inspector-$VER.tar.gz
           BuildArch:      noarch
           Requires:       python3-gobject gtk4 libadwaita
 
           %description
-          GTK4/Libadwaita application.
+          MQTT message inspector for IoT
 
           %prep
           %setup -q
 
           %install
-          mkdir -p %{buildroot}/usr/share/mqtt-inspector/mqtt_inspector
-          cp src/mqtt_inspector/*.py %{buildroot}/usr/share/mqtt-inspector/mqtt_inspector/
+          mkdir -p \$RPM_BUILD_ROOT/usr/share/mqtt-inspector/mqtt_inspector
+          cp src/mqtt_inspector/*.py \$RPM_BUILD_ROOT/usr/share/mqtt-inspector/mqtt_inspector/
           if [ -d src/mqtt_inspector/locale ]; then
-            cp -r src/mqtt_inspector/locale %{buildroot}/usr/share/mqtt-inspector/mqtt_inspector/
+            cp -r src/mqtt_inspector/locale \$RPM_BUILD_ROOT/usr/share/mqtt-inspector/mqtt_inspector/
           fi
 
-          mkdir -p %{buildroot}/usr/bin
-          cat > %{buildroot}/usr/bin/mqtt-inspector << 'LAUNCHER'
+          mkdir -p \$RPM_BUILD_ROOT/usr/bin
+          cat > \$RPM_BUILD_ROOT/usr/bin/mqtt-inspector << 'LAUNCHER'
           #!/bin/bash
-          exec python3 -c "import sys; sys.path.insert(0, '/usr/share/mqtt-inspector'); from mqtt_inspector.main import main; main()" "$@"
+          exec python3 -c "import sys; sys.path.insert(0, '/usr/share/mqtt-inspector'); from mqtt_inspector.main import main; main()" "\$@"
           LAUNCHER
-          chmod 755 %{buildroot}/usr/bin/mqtt-inspector
+          chmod 755 \$RPM_BUILD_ROOT/usr/bin/mqtt-inspector
 
-          mkdir -p %{buildroot}/usr/share/applications
-          cp data/*.desktop %{buildroot}/usr/share/applications/ 2>/dev/null || true
+          mkdir -p \$RPM_BUILD_ROOT/usr/share/applications
+          cp data/*.desktop \$RPM_BUILD_ROOT/usr/share/applications/ 2>/dev/null || true
 
-          mkdir -p %{buildroot}/usr/share/icons/hicolor/scalable/apps
-          cp data/icons/*.svg %{buildroot}/usr/share/icons/hicolor/scalable/apps/ 2>/dev/null || true
+          mkdir -p \$RPM_BUILD_ROOT/usr/share/icons/hicolor/scalable/apps
+          cp data/icons/*.svg \$RPM_BUILD_ROOT/usr/share/icons/hicolor/scalable/apps/ 2>/dev/null || true
 
           %files
           %license LICENSE
@@ -77,9 +84,13 @@ jobs:
           /usr/share/mqtt-inspector/
           /usr/share/applications/*.desktop
           /usr/share/icons/hicolor/scalable/apps/*.svg
-          SPEC
-          sed -i "s/VERSION_PLACEHOLDER/$VERSION/g" ~/rpmbuild/SPECS/mqtt-inspector.spec
-          sed -i "s|\${repo}|mqtt-inspector|g; s|\${PYNAME}|mqtt_inspector|g" ~/rpmbuild/SPECS/mqtt-inspector.spec
+
+          %changelog
+          * $(date "+%a %b %d %Y") Daniel Nylander <daniel@danielnylander.se> - $VER-1
+          - RPM build
+          SPECEOF
+
+          sed -i 's/^          //' ~/rpmbuild/SPECS/mqtt-inspector.spec
           rpmbuild -ba ~/rpmbuild/SPECS/mqtt-inspector.spec
 
       - name: Upload RPM to release
@@ -87,7 +98,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION=${{ steps.version.outputs.version }}
-          gh release upload "v$VERSION" \
-            ~/rpmbuild/RPMS/noarch/mqtt-inspector-${VERSION}-1.noarch.rpm \
-            --clobber
+          VER=${{ steps.version.outputs.version }}
+          RPM=$(find ~/rpmbuild/RPMS -name "*.rpm" | head -1)
+          [ -f "$RPM" ] && gh release upload "v$VER" "$RPM" --clobber || echo "No RPM found"
