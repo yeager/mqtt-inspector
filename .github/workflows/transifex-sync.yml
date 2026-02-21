@@ -20,7 +20,7 @@ jobs:
           TX_TOKEN: ${{ secrets.TX_TOKEN }}
         run: |
           tx push -s --skip
-          tx pull -a --force --minimum-perc 10
+          tx pull -a --force --minimum-perc 20
       - name: Commit translations
         run: |
           git config user.name "GitHub Actions"
