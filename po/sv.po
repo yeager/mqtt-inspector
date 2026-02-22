@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mqtt-inspector\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-22 12:23+0100\n"
+"POT-Creation-Date: 2026-02-22 17:03+0100\n"
 "PO-Revision-Date: 2026-02-16 16:18+0000\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>, 2026\n"
 "Language-Team: Swedish (https://app.transifex.com/danielnylander/teams/304858/sv/)\n"
@@ -21,208 +21,208 @@ msgstr ""
 "Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/mqtt_inspector/main.py:119
+#: src/mqtt_inspector/main.py:120
 msgid "Connect to Broker"
 msgstr "Anslut till broker"
 
-#: src/mqtt_inspector/main.py:133
+#: src/mqtt_inspector/main.py:134
 msgid "Profile"
 msgstr "Profil"
 
-#: src/mqtt_inspector/main.py:137
+#: src/mqtt_inspector/main.py:138
 msgid "Saved Profiles"
 msgstr "Sparade profiler"
 
-#: src/mqtt_inspector/main.py:139
+#: src/mqtt_inspector/main.py:140
 msgid "(New)"
 msgstr "(Ny)"
 
-#: src/mqtt_inspector/main.py:147
+#: src/mqtt_inspector/main.py:148
 msgid "Connection"
 msgstr "Anslutning"
 
-#: src/mqtt_inspector/main.py:150
+#: src/mqtt_inspector/main.py:151
 msgid "Host"
 msgstr "Värd"
 
-#: src/mqtt_inspector/main.py:155
+#: src/mqtt_inspector/main.py:156
 msgid "Port"
 msgstr "Port"
 
-#: src/mqtt_inspector/main.py:159
+#: src/mqtt_inspector/main.py:160
 msgid "Use TLS"
 msgstr "Använd TLS"
 
-#: src/mqtt_inspector/main.py:163
+#: src/mqtt_inspector/main.py:164
 msgid "Client ID"
 msgstr "Klient-id"
 
-#: src/mqtt_inspector/main.py:168
+#: src/mqtt_inspector/main.py:169
 msgid "Authentication"
 msgstr "Autentisering"
 
-#: src/mqtt_inspector/main.py:171
+#: src/mqtt_inspector/main.py:172
 msgid "Username"
 msgstr "Användarnamn"
 
-#: src/mqtt_inspector/main.py:174
+#: src/mqtt_inspector/main.py:175
 msgid "Password"
 msgstr "Lösenord"
 
-#: src/mqtt_inspector/main.py:184
+#: src/mqtt_inspector/main.py:185
 msgid "Save Profile"
 msgstr "Spara profil"
 
-#: src/mqtt_inspector/main.py:188
+#: src/mqtt_inspector/main.py:189
 msgid "Delete Profile"
 msgstr "Ta bort profil"
 
-#: src/mqtt_inspector/main.py:193 src/mqtt_inspector/main.py:389
-#: src/mqtt_inspector/main.py:610 src/mqtt_inspector/main.py:653
+#: src/mqtt_inspector/main.py:194 src/mqtt_inspector/main.py:390
+#: src/mqtt_inspector/main.py:611 src/mqtt_inspector/main.py:654
 msgid "Connect"
 msgstr "Anslut"
 
-#: src/mqtt_inspector/main.py:274
+#: src/mqtt_inspector/main.py:275
 msgid "Export Messages"
 msgstr "Exportera meddelanden"
 
-#: src/mqtt_inspector/main.py:287
+#: src/mqtt_inspector/main.py:288
 msgid "Format"
 msgstr "Format"
 
-#: src/mqtt_inspector/main.py:290
+#: src/mqtt_inspector/main.py:291
 msgid "File Format"
 msgstr "Filformat"
 
-#: src/mqtt_inspector/main.py:300
+#: src/mqtt_inspector/main.py:301
 msgid "Export"
 msgstr "Exportera"
 
-#: src/mqtt_inspector/main.py:358 src/mqtt_inspector/main.py:818
+#: src/mqtt_inspector/main.py:359 src/mqtt_inspector/main.py:819
 msgid "MQTT Inspector"
 msgstr "MQTT-inspekterare"
 
-#: src/mqtt_inspector/main.py:400
+#: src/mqtt_inspector/main.py:401
 msgid "Subscribe filter (e.g. home/#)"
 msgstr "Prenumerationsfilter (t.ex. home/#)"
 
-#: src/mqtt_inspector/main.py:407
+#: src/mqtt_inspector/main.py:408
 msgid "Show Publish Panel"
 msgstr "Visa publiceringspanel"
 
-#: src/mqtt_inspector/main.py:455
+#: src/mqtt_inspector/main.py:456
 msgid "Hex"
 msgstr "Hex"
 
-#: src/mqtt_inspector/main.py:459
+#: src/mqtt_inspector/main.py:460
 msgid "Clear History"
 msgstr "Töm historik"
 
-#: src/mqtt_inspector/main.py:497
+#: src/mqtt_inspector/main.py:498
 msgid "Publish"
 msgstr "Publicera"
 
-#: src/mqtt_inspector/main.py:502
+#: src/mqtt_inspector/main.py:503
 msgid "Topic"
 msgstr "Ämne"
 
-#: src/mqtt_inspector/main.py:511
+#: src/mqtt_inspector/main.py:512
 msgid "Retain"
 msgstr "Håll kvar"
 
-#: src/mqtt_inspector/main.py:514
+#: src/mqtt_inspector/main.py:515
 msgid "Send"
 msgstr "Skicka"
 
-#: src/mqtt_inspector/main.py:545 src/mqtt_inspector/main.py:613
-#: src/mqtt_inspector/main.py:655
+#: src/mqtt_inspector/main.py:546 src/mqtt_inspector/main.py:614
+#: src/mqtt_inspector/main.py:656
 msgid "Disconnected"
 msgstr "Frånkopplad"
 
-#: src/mqtt_inspector/main.py:581
+#: src/mqtt_inspector/main.py:582
 #, python-format
 msgid "Connecting to %s:%d…"
 msgstr "Ansluter till %s:%d…"
 
-#: src/mqtt_inspector/main.py:602
+#: src/mqtt_inspector/main.py:603
 #, python-format
 msgid "Connection failed: %s"
 msgstr "Anslutning misslyckades: %s"
 
-#: src/mqtt_inspector/main.py:623
+#: src/mqtt_inspector/main.py:624
 #, python-format
 msgid "Connection refused (rc=%s)"
 msgstr "Anslutning nekad (rc=%s)"
 
-#: src/mqtt_inspector/main.py:647
+#: src/mqtt_inspector/main.py:648
 msgid "Disconnect"
 msgstr "Koppla från"
 
-#: src/mqtt_inspector/main.py:649
+#: src/mqtt_inspector/main.py:650
 #, python-format
 msgid "Connected to %s"
 msgstr "Ansluten till %s"
 
-#: src/mqtt_inspector/main.py:668
+#: src/mqtt_inspector/main.py:669
 #, python-format
 msgid "Messages: %d"
 msgstr "Meddelanden: %d"
 
-#: src/mqtt_inspector/main.py:676
+#: src/mqtt_inspector/main.py:677
 #, python-format
 msgid "Last: %s on %s"
 msgstr "Senaste: %s den %s"
 
-#: src/mqtt_inspector/main.py:741
+#: src/mqtt_inspector/main.py:742
 #, python-format
 msgid "Topic: %s | QoS: %d | Retain: %s | Time: %s"
 msgstr "Ämne: %s | QoS: %d | Håll kvar: %s | Tid: %s"
 
-#: src/mqtt_inspector/main.py:744
+#: src/mqtt_inspector/main.py:745
 msgid "Yes"
 msgstr "Ja"
 
-#: src/mqtt_inspector/main.py:744
+#: src/mqtt_inspector/main.py:745
 msgid "No"
 msgstr "Nej"
 
-#: src/mqtt_inspector/main.py:778
+#: src/mqtt_inspector/main.py:779
 #, python-format
 msgid "Subscribed to %s"
 msgstr "Prenumerera på %s"
 
-#: src/mqtt_inspector/main.py:788
+#: src/mqtt_inspector/main.py:789
 msgid "Not connected"
 msgstr "Inte ansluten"
 
-#: src/mqtt_inspector/main.py:799
+#: src/mqtt_inspector/main.py:800
 #, python-format
 msgid "Published to %s at %s"
 msgstr "Publicerad till %s den %s"
 
-#: src/mqtt_inspector/main.py:826
+#: src/mqtt_inspector/main.py:827
 msgid ""
 "Translate this app: https://www.transifex.com/danielnylander/mqtt-inspector/"
 msgstr ""
 "Översätt denna app: https://www.transifex.com/danielnylander/mqtt-inspector/"
 
-#: src/mqtt_inspector/main.py:960
+#: src/mqtt_inspector/main.py:961
 msgid "Refreshing…"
 msgstr "Uppdaterar…"
 
-#: src/mqtt_inspector/main.py:961
+#: src/mqtt_inspector/main.py:962
 msgid "Ready"
 msgstr "Redo"
 
-#: src/mqtt_inspector/main.py:979
+#: src/mqtt_inspector/main.py:980
 msgid "Welcome"
 msgstr "Välkommen"
 
-#: src/mqtt_inspector/main.py:984
+#: src/mqtt_inspector/main.py:985
 msgid "Welcome to MQTT Inspector"
 msgstr "Välkommen till MQTT-inspekterare"
 
-#: src/mqtt_inspector/main.py:985
+#: src/mqtt_inspector/main.py:986
 msgid ""
 "Inspect and debug MQTT traffic.\n"
 "\n"
@@ -236,6 +236,6 @@ msgstr ""
 "✓ Prenumerera och publicera\n"
 "✓ Visa meddelandets nyttolast"
 
-#: src/mqtt_inspector/main.py:986
+#: src/mqtt_inspector/main.py:987
 msgid "Get Started"
 msgstr "Kom igång"
