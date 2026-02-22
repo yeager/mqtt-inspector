@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the mqtt-inspector package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: mqtt-inspector\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-22 06:25+0100\n"
+"POT-Creation-Date: 2026-02-22 17:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,207 +17,207 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/mqtt_inspector/main.py:119
+#: src/mqtt_inspector/main.py:120
 msgid "Connect to Broker"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:133
+#: src/mqtt_inspector/main.py:134
 msgid "Profile"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:137
+#: src/mqtt_inspector/main.py:138
 msgid "Saved Profiles"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:139
+#: src/mqtt_inspector/main.py:140
 msgid "(New)"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:147
+#: src/mqtt_inspector/main.py:148
 msgid "Connection"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:150
+#: src/mqtt_inspector/main.py:151
 msgid "Host"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:155
+#: src/mqtt_inspector/main.py:156
 msgid "Port"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:159
+#: src/mqtt_inspector/main.py:160
 msgid "Use TLS"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:163
+#: src/mqtt_inspector/main.py:164
 msgid "Client ID"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:168
+#: src/mqtt_inspector/main.py:169
 msgid "Authentication"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:171
+#: src/mqtt_inspector/main.py:172
 msgid "Username"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:174
+#: src/mqtt_inspector/main.py:175
 msgid "Password"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:184
+#: src/mqtt_inspector/main.py:185
 msgid "Save Profile"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:188
+#: src/mqtt_inspector/main.py:189
 msgid "Delete Profile"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:193 src/mqtt_inspector/main.py:389
-#: src/mqtt_inspector/main.py:610 src/mqtt_inspector/main.py:653
+#: src/mqtt_inspector/main.py:194 src/mqtt_inspector/main.py:390
+#: src/mqtt_inspector/main.py:611 src/mqtt_inspector/main.py:654
 msgid "Connect"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:274
+#: src/mqtt_inspector/main.py:275
 msgid "Export Messages"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:287
+#: src/mqtt_inspector/main.py:288
 msgid "Format"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:290
+#: src/mqtt_inspector/main.py:291
 msgid "File Format"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:300
+#: src/mqtt_inspector/main.py:301
 msgid "Export"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:358 src/mqtt_inspector/main.py:818
+#: src/mqtt_inspector/main.py:359 src/mqtt_inspector/main.py:819
 msgid "MQTT Inspector"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:400
+#: src/mqtt_inspector/main.py:401
 msgid "Subscribe filter (e.g. home/#)"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:407
+#: src/mqtt_inspector/main.py:408
 msgid "Show Publish Panel"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:455
+#: src/mqtt_inspector/main.py:456
 msgid "Hex"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:459
+#: src/mqtt_inspector/main.py:460
 msgid "Clear History"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:497
+#: src/mqtt_inspector/main.py:498
 msgid "Publish"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:502
+#: src/mqtt_inspector/main.py:503
 msgid "Topic"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:511
+#: src/mqtt_inspector/main.py:512
 msgid "Retain"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:514
+#: src/mqtt_inspector/main.py:515
 msgid "Send"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:545 src/mqtt_inspector/main.py:613
-#: src/mqtt_inspector/main.py:655
+#: src/mqtt_inspector/main.py:546 src/mqtt_inspector/main.py:614
+#: src/mqtt_inspector/main.py:656
 msgid "Disconnected"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:581
+#: src/mqtt_inspector/main.py:582
 #, python-format
 msgid "Connecting to %s:%d…"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:602
+#: src/mqtt_inspector/main.py:603
 #, python-format
 msgid "Connection failed: %s"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:623
+#: src/mqtt_inspector/main.py:624
 #, python-format
 msgid "Connection refused (rc=%s)"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:647
+#: src/mqtt_inspector/main.py:648
 msgid "Disconnect"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:649
+#: src/mqtt_inspector/main.py:650
 #, python-format
 msgid "Connected to %s"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:668
+#: src/mqtt_inspector/main.py:669
 #, python-format
 msgid "Messages: %d"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:676
+#: src/mqtt_inspector/main.py:677
 #, python-format
 msgid "Last: %s on %s"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:741
+#: src/mqtt_inspector/main.py:742
 #, python-format
 msgid "Topic: %s | QoS: %d | Retain: %s | Time: %s"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:744
+#: src/mqtt_inspector/main.py:745
 msgid "Yes"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:744
+#: src/mqtt_inspector/main.py:745
 msgid "No"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:778
+#: src/mqtt_inspector/main.py:779
 #, python-format
 msgid "Subscribed to %s"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:788
+#: src/mqtt_inspector/main.py:789
 msgid "Not connected"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:799
+#: src/mqtt_inspector/main.py:800
 #, python-format
 msgid "Published to %s at %s"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:826
+#: src/mqtt_inspector/main.py:827
 msgid ""
 "Translate this app: https://www.transifex.com/danielnylander/mqtt-inspector/"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:960
+#: src/mqtt_inspector/main.py:961
 msgid "Refreshing…"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:961
+#: src/mqtt_inspector/main.py:962
 msgid "Ready"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:979
+#: src/mqtt_inspector/main.py:980
 msgid "Welcome"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:984
+#: src/mqtt_inspector/main.py:985
 msgid "Welcome to MQTT Inspector"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:985
+#: src/mqtt_inspector/main.py:986
 msgid ""
 "Inspect and debug MQTT traffic.\n"
 "\n"
@@ -226,6 +226,6 @@ msgid ""
 "✓ View message payloads"
 msgstr ""
 
-#: src/mqtt_inspector/main.py:986
+#: src/mqtt_inspector/main.py:987
 msgid "Get Started"
 msgstr ""
