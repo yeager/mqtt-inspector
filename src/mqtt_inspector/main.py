@@ -20,6 +20,7 @@ from gi.repository import Gtk, Adw, Gio, GLib, Gdk, Pango
 import paho.mqtt.client as mqtt
 
 from mqtt_inspector import __version__
+from mqtt_inspector.accessibility import AccessibilityManager
 
 # Set up gettext
 TEXTDOMAIN = 'mqtt-inspector'
@@ -1003,3 +1004,30 @@ if __name__ == '__main__':
         _save_wlc_settings(self._wlc_settings)
         dialog.close()
 
+
+
+# --- Session restore ---
+import json as _json
+import os as _os
+
+def _save_session(window, app_name):
+    config_dir = _os.path.join(_os.path.expanduser('~'), '.config', app_name)
+    _os.makedirs(config_dir, exist_ok=True)
+    state = {'width': window.get_width(), 'height': window.get_height(),
+             'maximized': window.is_maximized()}
+    try:
+        with open(_os.path.join(config_dir, 'session.json'), 'w') as f:
+            _json.dump(state, f)
+    except OSError:
+        pass
+
+def _restore_session(window, app_name):
+    path = _os.path.join(_os.path.expanduser('~'), '.config', app_name, 'session.json')
+    try:
+        with open(path) as f:
+            state = _json.load(f)
+        window.set_default_size(state.get('width', 800), state.get('height', 600))
+        if state.get('maximized'):
+            window.maximize()
+    except (FileNotFoundError, _json.JSONDecodeError, OSError):
+        pass
