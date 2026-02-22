@@ -1,6 +1,6 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the mqtt-inspector package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
@@ -9,9 +9,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: mqtt-inspector\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-22 06:25+0100\n"
+"POT-Creation-Date: 2026-02-22 12:23+0100\n"
 "PO-Revision-Date: 2026-02-16 16:18+0000\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>, 2026\n"
 "Language-Team: Swedish (https://app.transifex.com/danielnylander/teams/304858/sv/)\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: src/mqtt_inspector/main.py:119
 msgid "Connect to Broker"
-msgstr ""
+msgstr "Anslut till broker"
 
 #: src/mqtt_inspector/main.py:133
 msgid "Profile"
@@ -55,7 +55,7 @@ msgstr "Använd TLS"
 
 #: src/mqtt_inspector/main.py:163
 msgid "Client ID"
-msgstr ""
+msgstr "Klient-id"
 
 #: src/mqtt_inspector/main.py:168
 msgid "Authentication"
@@ -100,15 +100,15 @@ msgstr "Exportera"
 
 #: src/mqtt_inspector/main.py:358 src/mqtt_inspector/main.py:818
 msgid "MQTT Inspector"
-msgstr ""
+msgstr "MQTT-inspekterare"
 
 #: src/mqtt_inspector/main.py:400
 msgid "Subscribe filter (e.g. home/#)"
-msgstr ""
+msgstr "Prenumerationsfilter (t.ex. home/#)"
 
 #: src/mqtt_inspector/main.py:407
 msgid "Show Publish Panel"
-msgstr ""
+msgstr "Visa publiceringspanel"
 
 #: src/mqtt_inspector/main.py:455
 msgid "Hex"
@@ -120,7 +120,7 @@ msgstr "Töm historik"
 
 #: src/mqtt_inspector/main.py:497
 msgid "Publish"
-msgstr ""
+msgstr "Publicera"
 
 #: src/mqtt_inspector/main.py:502
 msgid "Topic"
@@ -128,7 +128,7 @@ msgstr "Ämne"
 
 #: src/mqtt_inspector/main.py:511
 msgid "Retain"
-msgstr ""
+msgstr "Håll kvar"
 
 #: src/mqtt_inspector/main.py:514
 msgid "Send"
@@ -171,12 +171,12 @@ msgstr "Meddelanden: %d"
 #: src/mqtt_inspector/main.py:676
 #, python-format
 msgid "Last: %s on %s"
-msgstr ""
+msgstr "Senaste: %s den %s"
 
 #: src/mqtt_inspector/main.py:741
 #, python-format
 msgid "Topic: %s | QoS: %d | Retain: %s | Time: %s"
-msgstr ""
+msgstr "Ämne: %s | QoS: %d | Håll kvar: %s | Tid: %s"
 
 #: src/mqtt_inspector/main.py:744
 msgid "Yes"
@@ -189,7 +189,7 @@ msgstr "Nej"
 #: src/mqtt_inspector/main.py:778
 #, python-format
 msgid "Subscribed to %s"
-msgstr ""
+msgstr "Prenumerera på %s"
 
 #: src/mqtt_inspector/main.py:788
 msgid "Not connected"
@@ -198,12 +198,13 @@ msgstr "Inte ansluten"
 #: src/mqtt_inspector/main.py:799
 #, python-format
 msgid "Published to %s at %s"
-msgstr ""
+msgstr "Publicerad till %s den %s"
 
 #: src/mqtt_inspector/main.py:826
 msgid ""
 "Translate this app: https://www.transifex.com/danielnylander/mqtt-inspector/"
 msgstr ""
+"Översätt denna app: https://www.transifex.com/danielnylander/mqtt-inspector/"
 
 #: src/mqtt_inspector/main.py:960
 msgid "Refreshing…"
@@ -215,11 +216,11 @@ msgstr "Redo"
 
 #: src/mqtt_inspector/main.py:979
 msgid "Welcome"
-msgstr ""
+msgstr "Välkommen"
 
 #: src/mqtt_inspector/main.py:984
 msgid "Welcome to MQTT Inspector"
-msgstr ""
+msgstr "Välkommen till MQTT-inspekterare"
 
 #: src/mqtt_inspector/main.py:985
 msgid ""
@@ -229,7 +230,12 @@ msgid ""
 "✓ Subscribe and publish\n"
 "✓ View message payloads"
 msgstr ""
+"Inspektera och felsök MQTT-trafik.\n"
+"\n"
+"✓ Anslut till MQTT-broker\n"
+"✓ Prenumerera och publicera\n"
+"✓ Visa meddelandets nyttolast"
 
 #: src/mqtt_inspector/main.py:986
 msgid "Get Started"
-msgstr ""
+msgstr "Kom igång"
