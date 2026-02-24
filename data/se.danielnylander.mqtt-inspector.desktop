@@ -1,5 +1,6 @@
 [Desktop Entry]
 Type=Application
+StartupWMClass=se.danielnylander.mqtt-inspector
 Name=MQTT Inspector
 GenericName=MQTT Message Inspector
 Comment=MQTT message inspector for IoT debugging
